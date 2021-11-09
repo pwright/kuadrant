@@ -1,0 +1,113 @@
+---
+name: Testing
+
+on: pull_request
+
+jobs:
+  build:
+    name: Build executable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: make install
+        run: |
+          make install
+
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.1.0
+        with:
+          version: v0.11.1
+          config: utils/kind/cluster.yaml
+          cluster_name: kuadrant-local
+          wait: 120s
+      - name: Check cluster info
+        run: |
+          kubectl cluster-info dump
+      - name: Run tests
+        run: |
+          make test
+      - name: Report to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          files: "*.coverprofile"
+
+  verify-istio-manifest:
+    name: Verify istio manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: run test
+        run: |
+          make istio-manifest-update-test
+
+  verify-kuadrant-manifest:
+    name: Verify kuadrant manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: run test
+        run: |
+          make kuadrant-manifest-update-test
+
+  verify-limitador-manifest:
+    name: Verify limitador manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: run test
+        run: |
+          make limitador-operator-manifest-update-test
+
+  verify-authorino-manifest:
+    name: Verify authorino manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+        id: go
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: remove existing kustomize
+        run: |
+          # not necessary when https://github.com/Kuadrant/authorino/pull/150 is removed
+          rm -rf /usr/local/bin/kustomize /home/runner/go/bin/controller-gen
+      - name: run test
+        run: |
+          make authorino-manifest-update-test

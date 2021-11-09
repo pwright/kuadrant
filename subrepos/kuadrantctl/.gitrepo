@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Kuadrant/kuadrantctl
+	branch = main
+	commit = ae6ee5f2c87bd10ec2053ad3b41826064d96e415
+	parent = e813f49654f6f9deb5ac99e6f0adfe1b328bfd9a
+	method = merge
+	cmdver = 0.4.3
