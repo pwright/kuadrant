@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Kuadrant/petstore-service-sample
+	branch = main
+	commit = df536af339bd9afd36b49001fcc468d4c2a1651a
+	parent = c1a2eadd69139eaf25ae43119f96b5060e4ed73d
+	method = merge
+	cmdver = 0.4.3
