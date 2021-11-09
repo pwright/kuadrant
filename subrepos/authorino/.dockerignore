@@ -1,0 +1,12 @@
+.git
+.github
+.gitignore
+.gitmodules
+.dockerignore
+
+docs
+examples
+tmp
+
+.idea
+.vscode

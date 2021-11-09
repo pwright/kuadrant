@@ -1,0 +1,11 @@
+domain: authorino.3scale.net
+layout: go.kubebuilder.io/v2
+projectName: authorino
+repo: github.com/kuadrant/authorino/
+resources:
+- group: config
+  kind: AuthConfig
+  version: v1beta1
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}
