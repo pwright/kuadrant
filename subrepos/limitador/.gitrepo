@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Kuadrant/limitador
+	branch = main
+	commit = 56a4fecbd4d21ae2deacb2a68b2f5f8dfc4fcfc4
+	parent = 12ba57d19c25e00adbfaa2066c6d6e69fd6ea055
+	method = merge
+	cmdver = 0.4.3
