@@ -1,0 +1,11 @@
+= Skewer
+
+image::https://github.com/skupperproject/skewer/actions/workflows/main.yaml/badge.svg[main,link=https://github.com/skupperproject/skewer/actions/workflows/main.yaml]
+
+A library for documenting and testing Skupper examples
+
+link:test-example/skewer.yaml[Example `skewer.yaml` file]
+
+xref:test-example/README.adoc[Example `README.md` output]
+
+link:test-example/Planofile[Example generate and test functions]

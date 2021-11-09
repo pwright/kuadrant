@@ -1,0 +1,231 @@
+= Getting Started
+
+This guide lets you quickly evaluate Kuadrant.
+Follow the steps to integrate kuadrant with your service with the minimal configuration needed.
+
+== Table of contents
+
+* <<requirements,Requirements>>
+* <<steps,Steps>>
+ ** <<download-kuadrantctl-tool,Download kuadrantctl tool>>
+ ** <<install-kuadrant,Install kuadrant>>
+ ** <<deploy-the-upstream-toy-store-api-service,Deploy the upstream Toy Store API service>>
+ ** <<create-kuadrant-api-object,Create kuadrant API object>>
+ ** <<create-kuadrant-api-product-object,Create kuadrant API Product object>>
+ ** <<test-the-toy-store-api,Test the Toy Store API>>
+ ** <<next-steps,Next steps>>
+
+== Requirements
+
+* Having a https://kubernetes.io/[Kubernetes] (1.19, 1.20, 1.21, 1.22) cluster up and running.
+* Permission from the Kubernetes cluster to create Custom Resource Definitions (CRDs) during kuadrant's installation.
+Cluster administrators can handle this requirement through the Kubernetes API Role-Based Access Control bindings.
+* A deployed https://kubernetes.io/docs/concepts/services-networking/service/[kubernetes service] in the cluster acting as the entry point for your API.
+* Golang 1.16 environment.
+Download and install steps https://golang.org/doc/install[here]
+* Installed https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] >= 1.19
+* Installed https://stedolan.github.io/jq/download/[`jq`] >= 1.5 utility to parse JSON objects
+
+*NOTE*: You can easily have a local cluster setup using https://kind.sigs.k8s.io/[Kind].
+In this case, the requirement is to have https://docker.com/[Docker].
+
+== Steps
+
+=== Download kuadrantctl tool
+
+https://github.com/Kuadrant/kuadrantctl[`kuadrantctl`] is the kuadrant configuration command line utility.
+Currently `kuadrantctl install` command is the recommended installation method of kuadrant.
+
+Download the latest release
+
+[source,bash]
+----
+go install github.com/kuadrant/kuadrantctl@latest
+----
+
+=== Install kuadrant
+
+The install command will create a namespace called `kuadrant-system` and deploy kuadrant services in that namespace.
+
+[source,bash]
+----
+kuadrantctl install
+----
+
+On successful command return, you should see the following deployments and pods created.
+
+[source,bash]
+----
+❯ kubectl get pods -n kuadrant-system
+NAME                                                     READY   STATUS    RESTARTS   AGE
+authorino-controller-manager-XXXXXXXXXXX-XXXX            2/2     Running   0          3m6s
+istiod-XXXXXXXXXX-XXXXX                                  1/1     Running   0          3m11s
+kuadrant-controller-manager-XXXXXXXXXX-XXXX              2/2     Running   0          3m5s
+kuadrant-gateway-XXXXXXXXXX-XXXX                         1/1     Running   0          3m5s
+limitador-XXXXXXXXXX-XXXXX                               1/1     Running   0          2m13s
+limitador-operator-controller-manager-XXXXXXXXXX-XXXXX   2/2     Running   0          3m6s
+
+
+❯ kubectl get deployments -n kuadrant-system
+NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+authorino-controller-manager            1/1     1            1           4m51s
+istiod                                  1/1     1            1           4m57s
+kuadrant-controller-manager             1/1     1            1           4m50s
+kuadrant-gateway                        1/1     1            1           4m51s
+limitador                               1/1     1            1           3m58s
+limitador-operator-controller-manager   1/1     1            1           4m51s
+----
+
+=== Deploy the upstream Toy Store API service
+
+Skip this section if you already have your service deployed.
+
+The Toy Store API Service will be backed by a simple Echo API service.
+
+[source,bash]
+----
+❯ kubectl apply -n default -f https://raw.githubusercontent.com/kuadrant/kuadrant-controller/main/examples/toystore/toystore.yaml
+deployment.apps/toystore created
+service/toystore created
+----
+
+Verify that the Toy Store pod is up and running.
+
+[source,bash]
+----
+❯ kubectl get pods -n default --field-selector=status.phase==Running
+NAME                        READY   STATUS    RESTARTS   AGE
+toystore-XXXXXXXXXX-XXXXX   1/1     Running   0          2m56s
+----
+
+Verify that the Toy Store service has been created.
+
+[source,bash]
+----
+❯ kubectl get service toystore -n default
+NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+toystore   ClusterIP   10.XX.XXX.XXX   <none>        80/TCP    4m28s
+----
+
+=== Create kuadrant API object
+
+The kuadrant API custom resource represents a specific kubernetes service.
+It needs to be created for each service that is wanted to be protected by kuadrant.
+
+There are two methods to make it easy for you to create kuadrant API objects:
+
+* https://github.com/Kuadrant/kuadrantctl/blob/main/doc/api-apply.md[kuadrantctl CLI] tool with the following command `kuadrantctl api apply --service-name <SERVICE>`
+* The xref:service-discovery.adoc[kuadrant service discovery] system watches for services labeled with kuadrant
+
+For this user guide, we will be using the link:managing-apis.md#service-discovery[kuadrant service discovery].
+To activate it, the upstream Toy Store API service needs to be labeled.
+
+[source,bash]
+----
+❯ kubectl -n default label service toystore discovery.kuadrant.io/enabled=true
+service/toystore labeled
+----
+
+Verify that the Toy Store kuadrant API object has been created.
+
+[source,yaml]
+----
+❯ kubectl -n default get api toystore -o yaml
+apiVersion: networking.kuadrant.io/v1beta1
+kind: API
+metadata:
+  name: toystore
+  namespace: default
+spec:
+  destination:
+    schema: http
+    serviceReference:
+      name: toystore
+      namespace: default
+      port: 80
+  mappings:
+    HTTPPathMatch:
+      type: Prefix
+      value: /
+----
+
+NOTE: some kubernetes specific data has been removed from the snippet above just for clarity.
+
+=== Create kuadrant API Product object
+
+The kuadrant API Product custom resource represents the kuadrant protection configuration for your service.
+For this user guide, we will be creating the minimum configuration required to integrate kuadrant with your service.
+
+[source,yaml]
+----
+❯ kubectl -n default apply -f - <<EOF
+---
+apiVersion: networking.kuadrant.io/v1beta1
+kind: APIProduct
+metadata:
+  name: toystore
+  namespace: default
+spec:
+  hosts:
+    - '*'
+  APIs:
+    - name: toystore
+      namespace: default
+EOF
+----
+
+Verify the APIProduct ready condition status is `true`
+
+[source,jsonc]
+----
+❯ kubectl get apiproduct toystore -n default -o jsonpath="{.status}" | jq '.'
+{
+  "conditions": [
+    {
+      "message": "Ready",
+      "reason": "Ready",
+      "status": "True",
+      "type": "Ready"
+    }
+  ],
+  "observedgen": 1
+}
+----
+
+=== Test the Toy Store API
+
+Run kubectl port-forward in a different shell:
+
+[source,bash]
+----
+❯ kubectl port-forward -n kuadrant-system service/kuadrant-gateway 9080:80
+Forwarding from [::1]:9080 -> 8080
+----
+
+The service can now be accessed at `+http://localhost:9080+` via a browser or any other client, like curl.
+
+[source,jsonc]
+----
+❯ curl localhost:9080/toys
+{
+  "method": "GET",
+  "path": "/toys",
+  "query_string": null,
+  "body": "",
+  "headers": {
+    "HTTP_HOST": "localhost:9080",
+    "HTTP_USER_AGENT": "curl/7.68.0",
+    "HTTP_ACCEPT": "*/*",
+    "HTTP_X_FORWARDED_FOR": "10.244.0.1",
+    "HTTP_X_FORWARDED_PROTO": "http",
+    "HTTP_X_ENVOY_INTERNAL": "true",
+    "HTTP_X_B3_SAMPLED": "0",
+    "HTTP_VERSION": "HTTP/1.1"
+  },
+  "uuid": "366b1500-0110-4770-a883-9eac384d5f3a"
+}
+----
+
+=== Next steps
+
+Check out other link:/README.md#user-guides[user guides] for other kuadrant capabilities like AuthN or rate limit.

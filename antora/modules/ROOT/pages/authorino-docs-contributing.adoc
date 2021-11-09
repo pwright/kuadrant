@@ -1,0 +1,46 @@
+= Contributing to Authorino
+
+== Open issues
+
+Start by checking the list of https://github.com/kuadrant/authorino/issues[issues] in GitHub.
+Maybe your idea was discussed in the past or is part of an ongoing conversation.
+
+In case it is a new idea for enhancement, a bug fix, a question or whatever unprecedented contribution you want to share, before sending a pull-request, please make sure to https://github.com/kuadrant/authorino/issues/new[describe the issue] so we can have a conversation together and help you fin dthe best way to get your contribution merged.
+
+== Local setup
+
+Make sure you have installed:
+
+* https://docker.com[Docker]
+* https://golang.org[Golang]
+* https://sdk.operatorframework.io/[Operator SDK]
+
+Then fork the repo and download the Golang dependencies:
+
+[source,sh]
+----
+git clone git@github.com:kuadrant/authorino.git && cd authorino
+make vendor
+----
+
+== Start contributing
+
+* Make your local changes
+* https://docs.github.com/en/github/authenticating-to-github/signing-commits[Sign] your commits
+* Send your pull-request
+
+== Additional resources to contributors
+
+* xref:terminology.adoc[Terminology]
+* link:../examples/[Examples]
+* xref:deploy.adoc[Deployment instructions]
+* xref:code_of_conduct.adoc[Code of Conduct]
+
+== Logging messages
+
+A few guidelines for adding logging messages in your code:
+
+. Make sure you understand Authorino's xref:logging.adoc[Logging] architecture and policy regarding log levels, log modes, tracing IDs, etc.
+. Respect controller-runtime's https://github.com/kubernetes-sigs/controller-runtime/blob/master/TMP-LOGGING.md[Logging Guidelines].
+. Do not add sensitive data to your `info` log messages;
+instead, redact all sensitive data in your log messages or use `debug` log level by mutating the logger with `V(1)` before outputting the message.

@@ -1,0 +1,31 @@
+@command
+def convertmds(app):
+    """
+    convert markdown to adoc files.
+    """
+    files = (find('subrepos', '*.md'))
+    for file in files:
+        uniq  = replace(file, '/', '-', count=0)
+        uniq  = replace(uniq, 'subrepos-', '',)
+        uniq  = replace(uniq, '.md', '.adoc',)
+        print(uniq)
+        start('bash ./convert-file.sh '+file + ' ' + uniq,)
+
+
+
+
+@command
+def annotate(app):
+    """
+    create include notes in adoc files.
+    """
+    notefiles = (find('antora/modules/ROOT/partials', '*.adoc'))
+    for file in notefiles:
+        source = get_base_name(file)
+        file = 'antora/modules/ROOT/pages/' + source
+        content=read(file)
+        content = replace(content, "= (.*)", "= \\1\n\ninclude::partial$" +source+ "[]\n",1)
+
+        write(file,content)
+
+
