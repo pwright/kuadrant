@@ -4,12 +4,14 @@ def convertmds(app):
     convert markdown to adoc files.
     """
     files = (find('subrepos', '*.md'))
+    write('antora/modules/ROOT/pages/index.adoc','= Index\n\n')
     for file in files:
         uniq  = replace(file, '/', '-', count=0)
         uniq  = replace(uniq, 'subrepos-', '',)
         uniq  = replace(uniq, '.md', '.adoc',)
         print(uniq)
         start('bash ./convert-file.sh '+file + ' ' + uniq,)
+        append('antora/modules/ROOT/pages/index.adoc','* xref:'+uniq+'[]\n\n')
 
 
 
