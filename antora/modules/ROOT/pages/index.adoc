@@ -1,84 +1,120 @@
-= Index
+= Home
 
-* xref:authorino-.github-ISSUE_TEMPLATE-bug_report.adoc[]
 
-* xref:authorino-.github-ISSUE_TEMPLATE-feature_request.adoc[]
+== xref:authorino-README.adoc[]
 
-* xref:authorino-README.adoc[]
+[%collapsible]
+====
+xref:authorino-docs-architecture.adoc[]
 
-* xref:authorino-docs-architecture.adoc[]
 
-* xref:authorino-docs-code_of_conduct.adoc[]
+xref:authorino-docs-deploy.adoc[]
 
-* xref:authorino-docs-contributing.adoc[]
+xref:authorino-docs-logging.adoc[]
 
-* xref:authorino-docs-deploy.adoc[]
+xref:authorino-docs-terminology.adoc[]
 
-* xref:authorino-docs-logging.adoc[]
+xref:authorino-docs-tutorials.adoc[]
 
-* xref:authorino-docs-terminology.adoc[]
+xref:authorino-docs-tutorials-openshift-demo-README.adoc[]
 
-* xref:authorino-docs-tutorials.adoc[]
+xref:authorino-docs-tutorials-showcase-README.adoc[]
 
-* xref:authorino-docs-tutorials-openshift-demo-README.adoc[]
 
-* xref:authorino-docs-tutorials-showcase-README.adoc[]
+xref:authorino-examples-README.adoc[]
+====
 
-* xref:authorino-examples-README.adoc[]
 
-* xref:kuadrant-controller-README.adoc[]
 
-* xref:kuadrant-controller-doc-architecture.adoc[]
+== xref:kuadrant-controller-README.adoc[]
 
-* xref:kuadrant-controller-doc-authn-api-key.adoc[]
+[%collapsible]
+====
 
-* xref:kuadrant-controller-doc-authn-oidc.adoc[]
+xref:kuadrant-controller-doc-getting-started.adoc[]
 
-* xref:kuadrant-controller-doc-development.adoc[]
 
-* xref:kuadrant-controller-doc-getting-started.adoc[]
+xref:kuadrant-controller-doc-architecture.adoc[]
 
-* xref:kuadrant-controller-doc-logging.adoc[]
 
-* xref:kuadrant-controller-doc-rate-limit.adoc[]
+xref:kuadrant-controller-doc-authn-api-key.adoc[]
 
-* xref:kuadrant-controller-doc-service-discovery-oas-configmap.adoc[]
 
-* xref:kuadrant-controller-doc-service-discovery-oas-service.adoc[]
+xref:kuadrant-controller-doc-authn-oidc.adoc[]
 
-* xref:kuadrant-controller-doc-service-discovery-path-match.adoc[]
 
-* xref:kuadrant-controller-doc-service-discovery.adoc[]
+xref:kuadrant-controller-doc-development.adoc[]
 
-* xref:kuadrant-controller-examples-dogs-cats-README.adoc[]
 
-* xref:kuadrantctl-README.adoc[]
+xref:kuadrant-controller-doc-logging.adoc[]
 
-* xref:kuadrantctl-doc-api-apply.adoc[]
+xref:kuadrant-controller-doc-rate-limit.adoc[]
 
-* xref:kuadrantctl-doc-development.adoc[]
+xref:kuadrant-controller-doc-service-discovery-oas-configmap.adoc[]
 
-* xref:kuadrantctl-doc-install.adoc[]
+xref:kuadrant-controller-doc-service-discovery-oas-service.adoc[]
 
-* xref:limitador-README.adoc[]
+xref:kuadrant-controller-doc-service-discovery-path-match.adoc[]
 
-* xref:limitador-limitador-server-CHANGELOG.adoc[]
 
-* xref:limitador-limitador-server-docs-configuration.adoc[]
+xref:kuadrant-controller-doc-service-discovery.adoc[]
 
-* xref:limitador-limitador-server-kubernetes-README.adoc[]
 
-* xref:limitador-limitador-server-vendor-protobufs-README.adoc[]
 
-* xref:limitador-limitador-CHANGELOG.adoc[]
+xref:kuadrant-controller-examples-dogs-cats-README.adoc[]
 
-* xref:limitador-limitador-docs-redis_active_active.adoc[]
+====
 
-* xref:petstore-service-sample-README.adoc[]
 
-* xref:skewer-README.adoc[]
+== xref:kuadrantctl-README.adoc[]
 
-* xref:skewer-plano-README.adoc[]
 
-* xref:skewer-test-example-README.adoc[]
+[%collapsible]
+====
+
+xref:kuadrantctl-doc-api-apply.adoc[]
+
+
+
+xref:kuadrantctl-doc-development.adoc[]
+
+
+
+xref:kuadrantctl-doc-install.adoc[]
+
+====
+
+
+
+== xref:limitador-README.adoc[]
+
+[%collapsible]
+====
+
+xref:limitador-limitador-server-CHANGELOG.adoc[]
+
+
+
+xref:limitador-limitador-server-docs-configuration.adoc[]
+
+
+
+xref:limitador-limitador-server-kubernetes-README.adoc[]
+
+
+
+xref:limitador-limitador-server-vendor-protobufs-README.adoc[]
+
+
+
+xref:limitador-limitador-CHANGELOG.adoc[]
+
+
+
+xref:limitador-limitador-docs-redis_active_active.adoc[]
+
+====
+
+
+== xref:petstore-service-sample-README.adoc[]
 
